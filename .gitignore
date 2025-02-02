@@ -1,0 +1,5 @@
+.env
+.DS_Store
+wordpress/
+database/
+db_data/

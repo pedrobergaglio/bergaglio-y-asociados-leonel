@@ -1,0 +1,37 @@
+services:
+  wordpress:
+    image: wordpress:php8.1
+    ports:
+      - "8080:80"
+    environment:
+      - WORDPRESS_DB_HOST=db:3306
+      - WORDPRESS_DB_USER=bergaglio_wp928
+      - WORDPRESS_DB_PASSWORD=]j]p4S6dA8
+      - WORDPRESS_DB_NAME=bergaglio_wp928
+      - APACHE_SERVER_NAME=localhost
+    volumes:
+      - ./wordpress:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mariadb:10.4.28
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=bergaglio_wp928
+      - MYSQL_USER=bergaglio_wp928
+      - MYSQL_PASSWORD=]j]p4S6dA8
+      - MYSQL_ROOT_PASSWORD=somewordpress
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "bergaglio_wp928", "--password=]j]p4S6dA8"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:
